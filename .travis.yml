@@ -1,3 +1,5 @@
 language: java
 jdk:
   - oraclejdk8
+notifications:
+slack: superjava:0OBQZuATTEm6Sjy2yc4so3PO
