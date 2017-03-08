@@ -9,6 +9,11 @@ public class App
     public static void main( String[] args )
     {
         System.out.println( "Hello World!" );
+        
+
+    }
+    public void SayHello(){
+    	System.out.println("Hi");
     }
     
     public void SayHello(){
