@@ -14,9 +14,6 @@ public class App
     }
     public void SayHello(){
     	System.out.println("Hi");
-    }
-    
-    public void SayHello(){
     	System.out.print("Hello");
     }
 }
