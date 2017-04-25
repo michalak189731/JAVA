@@ -7,6 +7,9 @@ public class Person {
 	private String name;
 	private String surname;
 	private String email;
+	private String login;
+
+	private String password;
 	private int id;
 	
 	private LocalDateTime joined;
@@ -54,4 +57,41 @@ public class Person {
 	public void setJoined(LocalDateTime joined) {
 		this.joined = joined;
 	}
+
+	public Person(String name, String surname, String email, String login, String password, int id,
+			LocalDateTime joined, LocalDateTime premiumExpires, boolean isDisabled, boolean isPremium) {
+		this.name = name;
+		this.surname = surname;
+		this.email = email;
+		this.setLogin(login);
+		this.password = password;
+		this.id = id;
+		this.joined = joined;
+		this.premiumExpires = premiumExpires;
+		this.isDisabled = isDisabled;
+		this.isPremium = isPremium;
+	}
+	
+	public Boolean IsPasswordCorrect(String givenPassword){
+		//TODO:validate with SHA
+		
+		return password == givenPassword;
+	}
+
+	public String getLogin() {
+		return login;
+	}
+
+	public void setLogin(String login) {
+		this.login = login;
+	}
+	
+	public boolean isDisabled() {
+		return isDisabled;
+	}
+
+	public boolean isPremium() {
+		return isPremium;
+	}
+
 }
