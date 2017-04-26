@@ -1,13 +1,17 @@
 package Michalak189731;
 
+import DBConnect.DBConnector;
+
 /**
  * Hello world!
  *
  */
 public class App 
 {
-    public static void main( String[] args )
-    {
+    public static void main( String[] args ){
+    	
+    	DBConnector connect = new DBConnector();
+    	connect.getData();
         System.out.println( "Hello World!" );
         
 
