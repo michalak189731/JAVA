@@ -94,4 +94,20 @@ public class Person {
 		return isPremium;
 	}
 
+	public LocalDateTime getPremiumExpires() {
+		return premiumExpires;
+	}
+
+	public void setPremiumExpires(LocalDateTime premiumExpires) {
+		this.premiumExpires = premiumExpires;
+	}
+
+	public void setDisabled(boolean isDisabled) {
+		this.isDisabled = isDisabled;
+	}
+
+	public void setPremium(boolean isPremium) {
+		this.isPremium = isPremium;
+	}
+
 }

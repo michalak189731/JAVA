@@ -1,6 +1,7 @@
 package parking;
 
 import java.time.*;
+import java.util.Timer;
 
 public class Rental {
 	
@@ -37,20 +38,27 @@ public class Rental {
 	public LocalDateTime getRentalStart() {
 		return rentalStart;
 	}
+	
+	public Timer getRentTimer(){
+		return rentTimer;
+	}
 
 	private int rentalID;
 	private Person client;
 	private ParkingSpot parkingSpot;
 	private boolean isFinished;
+	private Timer rentTimer;
 	
 	private LocalDateTime rentalStart;
 	private LocalDateTime rentalEnd;
 	
-	public Rental(Person client, ParkingSpot spot, LocalDateTime rentalStart )
+	public Rental(Person client, ParkingSpot spot, LocalDateTime rentalStart)
 	{
 		this.client = client;
 		this.parkingSpot = spot;
 		this.rentalStart = rentalStart;
+		this.rentTimer = new Timer();
+		
 		
 		spot.setTaken(true);
 		
