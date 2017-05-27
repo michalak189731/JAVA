@@ -76,14 +76,18 @@ public class Parking {
 		if(rental==null)
 			return;
 		
-		rental.getRentTimer().purge();
-		rental.getRentTimer().schedule(new TimerTask() {
+		rental.getTimer().cancel();
+		TimerTask timerTask = new TimerTask() {
 			
 			@Override
 			public void run() {
 				FinishRental(rental.getClient());
 			}
-		}, duration.toMillis());
+		};
+		
+		Timer timer = new Timer();
+		timer.schedule(timerTask, duration.toMillis());
+		rental.setTimer(timer);
 	}
 	
 	
@@ -107,6 +111,10 @@ public class Parking {
 		return ActiveRentals;
 	}
 
+	public ArrayList<Rental> getTimedOutRentals() {
+		return TimedOutRentals;
+	}
+	
 	public void FinishRental(Person client)
 	{
 		Rental targetRental = GetPersonRental(client);
@@ -227,14 +235,14 @@ public class Parking {
 	{
 		final Rental newRental = new Rental(client, spot, LocalDateTime.now());
 		ActiveRentals.add(newRental);
-		newRental.getRentTimer().schedule(new TimerTask() {			
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask() {			
 			@Override
 			public void run() {
-				FinishRental(newRental.getClient());
-				
+				CancelRental(newRental.getClient());
 			}
 		}, duration.toMillis());
-		
+		newRental.setTimer(timer);
 		
 		return newRental.getRentalID();
 	}
