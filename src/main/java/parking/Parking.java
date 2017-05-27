@@ -1,7 +1,8 @@
 package parking;
 
 import java.util.*;
-
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.security.*;
 import java.time.LocalDateTime;
 import java.time.Duration;
@@ -12,7 +13,7 @@ public class Parking {
 	private int premiumParkingSpots = 5;
 	private int disabledParkingSpots = 3;
 	
-	private MessageDigest messageDigest;
+	private static MessageDigest messageDigest;
 	
 	private ArrayList<ParkingSpot> AllParkingSpots = new ArrayList<ParkingSpot>();
 	
@@ -46,14 +47,32 @@ public class Parking {
 		if(targetUser == null)
 			return null;
 		
-		//TODO: Validate password
+		String hashedPass = DigestMessage(password);
 		
-		if(targetUser.IsPasswordCorrect(password))
+		if(targetUser.IsPasswordCorrect(hashedPass))
 			return targetUser;
 		else
 			return null;
 		
 	}
+	
+	public Person RegisterPerson(String name, String surname, String email, String login, String password, LocalDateTime premiumExpires, boolean isDisabled, boolean isPermium)
+	{
+		int id = Person.getNextId();
+		String hashedPassword = DigestMessage(password);
+		
+		Person result = new Person(name, surname, email, login, hashedPassword, id, LocalDateTime.now(), premiumExpires, isDisabled, isPermium);
+		//TODO: Validate if person is OK
+		
+		
+		Person.setNextId(id+1);
+		//TODO: Send Person to database 
+		
+		UserBroker.AddPerson(result);
+		
+		return result;
+	}
+	
 	
 	public int MakeRental(Person client, Duration duration)
 	{
@@ -194,6 +213,12 @@ public class Parking {
 			AllParkingSpots.add(spot);
 			DisabledParkingSpots.add(spot);
 		}
+		try{
+		this.messageDigest = MessageDigest.getInstance("SHA");}
+		catch(NoSuchAlgorithmException e)
+		{
+
+		}
 	}
 
 	private int MakeDisabledRental(Person client, Duration duration)
@@ -265,7 +290,15 @@ public class Parking {
 		return null;
 	}
 	
-	
+	private static String DigestMessage(String string)
+	{
+		try {
+			messageDigest.update(string.getBytes("UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return new String(messageDigest.digest());
+	}
 
 		
 }

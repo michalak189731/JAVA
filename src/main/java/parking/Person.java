@@ -4,6 +4,8 @@ import java.time.*;
 
 public class Person {
 	
+	private static int nextId =0;
+	
 	private String name;
 	private String surname;
 	private String email;
@@ -17,6 +19,16 @@ public class Person {
 	
 	private boolean isDisabled;
 	private boolean isPremium;
+	
+	public static int getNextId()
+	{
+		return nextId;
+	}
+	
+	public static void setNextId(int id)
+	{
+		nextId = id;
+	}
 	
 	public String getName() {
 		return name;
@@ -72,10 +84,8 @@ public class Person {
 		this.isPremium = isPremium;
 	}
 	
-	public Boolean IsPasswordCorrect(String givenPassword){
-		//TODO:validate with SHA
-		
-		return password == givenPassword;
+	public Boolean IsPasswordCorrect(String givenPassword){	
+		return password.equals(givenPassword);
 	}
 
 	public String getLogin() {

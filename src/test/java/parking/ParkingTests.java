@@ -6,12 +6,14 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.*;
 public class ParkingTests {
 
 	Parking parking;
 	Duration rentDuration;
 	Duration longRentDuration;
+	Person normalPerson, disabledPerson, premiumPerson;
 	
 	@Before
 	public void SetUp()
@@ -19,6 +21,9 @@ public class ParkingTests {
 		parking = new Parking();
 		rentDuration = Duration.ofSeconds(1);
 		longRentDuration = Duration.ofHours(1);
+		normalPerson = parking.RegisterPerson("Thomas", "Newmann", "test@test.com", "normal", "test", LocalDateTime.MIN, false, false);
+		premiumPerson = parking.RegisterPerson("Pavel", "Zadrok", "otherTest@test.com", "premium", "prem", LocalDateTime.now().plusMonths(2), false, true);
+		disabledPerson = parking.RegisterPerson("Zober", "Szulc", "superTest@test.com", "disabled", "dis", LocalDateTime.MIN, true, false);
 	}
 	
 	@Test
@@ -34,11 +39,11 @@ public class ParkingTests {
 	@Test 
 	public void LoginCorrectDataTest()
 	{
-		Person targetPerson = UserBroker.NormalPerson;
+		Person targetPerson = normalPerson;
 		
 		Person person = parking.Login("normal", "test");
 		
-		assertEquals(targetPerson, person);
+		assertEquals(targetPerson.getName(), person.getName());
 		
 	}
 	
@@ -122,4 +127,27 @@ public class ParkingTests {
 		assertEquals(0, parking.getTimedOutRentals().size());
 	}
 	
+	//TODO: Make test for disabled and premium rentals
+	
+	@Test
+	public void LoginCorrectData()
+	{
+		Person result = parking.Login("normal", "test");
+		
+		assertNotEquals(null, result);
+	}
+	
+	@Test
+	public void RegisterNewUserTest()
+	{
+		int currentUsers = UserBroker.getCurrentUsers();
+		
+		Person per = parking.RegisterPerson("TEsting", "Test", "weqwe@dsadsa.com", "mylogin", "pass", null, false, false);
+		if(currentUsers != UserBroker.getCurrentUsers()-1)
+			fail("Person not registered");
+		
+	   per = parking.Login("mylogin", "pass");
+	   
+	   assertNotEquals(null, per);
+	}
 }

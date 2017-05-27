@@ -1,26 +1,28 @@
 package parking;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class UserBroker {
-	
-	public final static Person NormalPerson = new Person("Thomas", "Newmann", "test@test.com", "normal", "test", 1, LocalDateTime.now().minusMonths(4), LocalDateTime.MIN, false, false);
-	public final static Person PremiumPerson = new Person("Pavel", "Zadrok", "otherTest@test.com", "premium", "prem", 1, LocalDateTime.now().minusMonths(4), LocalDateTime.now().plusMonths(2), false, true);
-	public final static Person DisabledPerson = new Person("Zober", "Szulc", "superTest@test.com", "disabled", "dis", 1, LocalDateTime.now().minusMonths(4), LocalDateTime.MIN, true, false);
-	
+	private final static ArrayList<Person> NewPeople = new ArrayList<Person>();
 	
 	public final static Person GetPerson(String username)
 	{
-		if(NormalPerson.getLogin() == username)
-			return NormalPerson;
-		
-		if(PremiumPerson.getLogin() == username)
-			return PremiumPerson;
-		
-		if(DisabledPerson.getLogin() == username)
-			return DisabledPerson;
+		for(Person p : NewPeople)
+		{
+			if(p.getLogin() == username)
+				return p;
+		}
 		
 		return null;
 	}
 	
+	public final static void AddPerson(Person person)
+	{
+		NewPeople.add(person);
+	}
+	
+	public final static int getCurrentUsers()
+	{
+		return NewPeople.size();
+	}
 }
