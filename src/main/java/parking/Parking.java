@@ -214,7 +214,7 @@ public class Parking {
 			DisabledParkingSpots.add(spot);
 		}
 		try{
-		this.messageDigest = MessageDigest.getInstance("SHA");}
+		Parking.messageDigest = MessageDigest.getInstance("SHA");}
 		catch(NoSuchAlgorithmException e)
 		{
 
