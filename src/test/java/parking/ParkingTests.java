@@ -2,12 +2,10 @@ package parking;
 import static org.junit.Assert.*;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.*;
 public class ParkingTests {
 
 	Parking parking;

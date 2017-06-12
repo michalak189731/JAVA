@@ -1,17 +1,23 @@
 package bots;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import parking.Parking;
-import parking.Person;
 import strategies.AbstractStrategy; 
 
-public abstract class Bot {
+public class Bot {
 
+	private static Logger logger = Logger.getAnonymousLogger();
+	private static int nextID = 0;
+	
 	private AbstractStrategy myStrategy;
 	private Parking parking;
 	
+	
 	private String login;
 	private String password;
-	private Person person;
+	private int botID; 
 	
 	public AbstractStrategy getMyStrategy() {
 		return myStrategy;
@@ -39,18 +45,13 @@ public abstract class Bot {
 	
 	public Bot(AbstractStrategy strategy, Parking parking)
 	{
+		botID = nextID;
+		nextID++;
 		myStrategy = strategy;
+		this.parking = parking;
 		initialize();
 	}
 	
-	public Person getPerson() {
-		return person;
-	}
-
-	public void setPerson(Person person) {
-		this.person = person;
-	}
-
 	private void initialize()
 	{
 		loadCredentials();
@@ -66,9 +67,17 @@ public abstract class Bot {
 	public void Start()
 	{
 		if(myStrategy==null)
+		{
+			logger.log(Level.WARNING, "Bot cannot find it's strategy. Exiting...");
 			return;
+		}
 		
 		myStrategy.execute(this, parking);
+	}
+	
+	public String toString()
+	{
+		return "Bot "+ botID + ": ";
 	}
 	
 }

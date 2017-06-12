@@ -1,12 +1,17 @@
 package bots;
 
+import java.awt.Desktop.Action;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.Scanner;
+import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 public class CredentialBroker {
 
-	private static final String filePath = "Credentials.txt"; 
+	private static final String filePath = "Credentials"; 
 	private static CredentialBroker instance;
 	
 	public static CredentialBroker getInstance()
@@ -21,16 +26,14 @@ public class CredentialBroker {
 	
 	private CredentialBroker()
 	{
-		String line;
-		Scanner scanner = new Scanner(filePath);
-		
-		while(scanner.hasNextLine())
-		{
-			line = scanner.nextLine();
-			ProcessLine(line);
+		try {
+			Stream<String> stream = Files.lines(Paths.get(filePath));
+			stream.forEach(s -> ProcessLine(s));
+			stream.close();
+		} catch (IOException e) {
+			Logger.getAnonymousLogger().severe("Error while reading file: ");
+			e.printStackTrace();
 		}
-		
-		scanner.close();
 	}
 	
 	

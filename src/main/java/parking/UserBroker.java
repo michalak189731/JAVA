@@ -9,7 +9,7 @@ public class UserBroker {
 	{
 		for(Person p : NewPeople)
 		{
-			if(p.getLogin() == username)
+			if(p.getLogin().equals(username))
 				return p;
 		}
 		
