@@ -171,6 +171,19 @@ public class Parking {
 		targetRental.getParkingSpot().setTaken(false);
 	}
 	
+	public Rental getRental(int rentalID)
+	{
+		for(Rental rent : ActiveRentals)
+		{
+			if(rent.getRentalID() == rentalID)
+				return rent;
+		}
+		
+		//TODO: Ask database for rental.
+		return null;
+	}
+	
+	//TODO: Test this method
 	public void BuyPremium(Person client, Duration duration)
 	{
 		if(client.isPremium())

@@ -6,6 +6,8 @@ import org.junit.Test;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+
+import javax.print.attribute.HashPrintServiceAttributeSet;
 public class ParkingTests {
 
 	Parking parking;
@@ -126,6 +128,28 @@ public class ParkingTests {
 	}
 	
 	//TODO: Make test for disabled and premium rentals
+	
+	@Test
+	public void RentDisabledSpotTest()
+	{
+		Person res = parking.Login("disabled", "dis");
+		
+		int rentID = parking.MakeRental(res, longRentDuration);
+		Rental rent = parking.getRental(rentID);
+		
+		assertTrue(parking.getDisabledParkingSpots().contains(rent.getParkingSpot()));
+	}
+	
+	@Test
+	public void RentPremiumSpotTest()
+	{
+		Person res = parking.Login("premium", "prem");
+		
+		int rentID = parking.MakeRental(res, longRentDuration);
+		Rental rent = parking.getRental(rentID);
+		
+		assertTrue(parking.getPremiumParkingSpots().contains(rent.getParkingSpot()));
+	}
 	
 	@Test
 	public void LoginCorrectData()
