@@ -6,6 +6,7 @@ import java.util.List;
 
 import bots.Bot;
 import bots.CredentialBroker;
+import bots.RunnableBot;
 import parking.Parking;
 import strategies.NormalRentStrategy;
 
@@ -13,7 +14,7 @@ public class SimulationStart {
 	
 	
 	static final int botsCount = 5;
-	private static List<Bot> bots = new ArrayList<Bot>();
+	private static List<RunnableBot> bots = new ArrayList<RunnableBot>();
 	private static Parking parking;
 	
 	public static void main(String[] args) {
@@ -23,9 +24,16 @@ public class SimulationStart {
 		CredentialBroker.getInstance();
 		Bot bot;
 	
-			bot = new Bot(new NormalRentStrategy(5, 3), SimulationStart.parking);
-			bot.Start();
-			bots.add(bot);
+			for(int i=0; i< 5; i++)
+			{
+				bot = new Bot(new NormalRentStrategy(5, 3), SimulationStart.parking);
+				RunnableBot runbot = new RunnableBot(bot);
+				Thread th = new Thread(runbot);
+				th.start();
+
+				bots.add(runbot);
+			}
+			
 	}
 	
 	
