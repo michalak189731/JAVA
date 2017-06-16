@@ -1,14 +1,14 @@
 package start;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
 import bots.Bot;
 import bots.CredentialBroker;
 import bots.RunnableBot;
 import parking.Parking;
 import strategies.NormalRentStrategy;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SimulationStart {
 	
@@ -24,7 +24,7 @@ public class SimulationStart {
 		CredentialBroker.getInstance();
 		Bot bot;
 	
-			for(int i=0; i< 5; i++)
+			for(int i=0; i< 3; i++)
 			{
 				bot = new Bot(new NormalRentStrategy(5, 3), SimulationStart.parking);
 				RunnableBot runbot = new RunnableBot(bot);
