@@ -1,10 +1,10 @@
 package bots;
 
+import parking.Parking;
+import strategies.AbstractStrategy;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import parking.Parking;
-import strategies.AbstractStrategy; 
 
 public class Bot {
 
@@ -60,6 +60,8 @@ public class Bot {
 	private void loadCredentials()
 	{
 		Credential cred = CredentialBroker.getInstance().getCredential();
+		if(cred == null)
+			return;
 		this.login = cred.getLogin();
 		this.password = cred.getPassword();
 	}

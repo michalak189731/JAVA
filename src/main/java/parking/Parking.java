@@ -1,11 +1,16 @@
 package parking;
 
-import java.util.*;
+import parking.exceptions.CurrentlyRentingException;
+import parking.exceptions.IncorrectCredentialsException;
+
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import java.security.*;
-import java.time.LocalDateTime;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Parking {
 	
@@ -38,30 +43,30 @@ public class Parking {
 		
 	}
 	
-	public Person Login(String username, String password)
+	public Person Login(String username, String password) throws IncorrectCredentialsException
 	{
 		
 		//For now mock target user
 		Person targetUser = UserBroker.GetPerson(username);
 		
 		if(targetUser == null)
-			return null;
+			throw new IncorrectCredentialsException("No such user.");
 		
 		String hashedPass = DigestMessage(password);
 		
 		if(targetUser.IsPasswordCorrect(hashedPass))
 			return targetUser;
 		else
-			return null;
+			throw new IncorrectCredentialsException("Incorrect password.");
 		
 	}
 	
-	public Person RegisterPerson(String name, String surname, String email, String login, String password, LocalDateTime premiumExpires, boolean isDisabled, boolean isPermium)
+	public Person RegisterPerson(String name, String surname, String email, String login, String password, LocalDateTime premiumExpires, boolean isDisabled, boolean isPremium)
 	{
 		int id = Person.getNextId();
 		String hashedPassword = DigestMessage(password);
 		
-		Person result = new Person(name, surname, email, login, hashedPassword, id, LocalDateTime.now(), premiumExpires, isDisabled, isPermium);
+		Person result = new Person(name, surname, email, login, hashedPassword, id, LocalDateTime.now(), premiumExpires, isDisabled, isPremium);
 		//TODO: Validate if person is OK
 		
 		
@@ -74,10 +79,10 @@ public class Parking {
 	}
 	
 	
-	public int MakeRental(Person client, Duration duration)
+	public int MakeRental(Person client, Duration duration) throws CurrentlyRentingException
 	{
 		if(GetPersonRental(client)!=null)
-			return -2;
+			throw new CurrentlyRentingException("User " + client.getName() + "is already renting spot.");
 		
 		if(client.isDisabled())
 			return MakeDisabledRental(client, duration);
@@ -89,7 +94,7 @@ public class Parking {
 			
 	} 
 	
-	public void ProlongRental(Person client, Duration duration)
+	void ProlongRental(Person client, Duration duration)
 	{
 		final Rental rental = GetPersonRental(client);
 		if(rental==null)
@@ -110,27 +115,27 @@ public class Parking {
 	}
 	
 	
-	public ArrayList<ParkingSpot> getAllParkingSpots() {
+	ArrayList<ParkingSpot> getAllParkingSpots() {
 		return AllParkingSpots;
 	}
 
-	public ArrayList<ParkingSpot> getNormalParkingSpots() {
+	 ArrayList<ParkingSpot> getNormalParkingSpots() {
 		return NormalParkingSpots;
 	}
 
-	public ArrayList<ParkingSpot> getPremiumParkingSpots() {
+	 ArrayList<ParkingSpot> getPremiumParkingSpots() {
 		return PremiumParkingSpots;
 	}
 
-	public ArrayList<ParkingSpot> getDisabledParkingSpots() {
+	ArrayList<ParkingSpot> getDisabledParkingSpots() {
 		return DisabledParkingSpots;
 	}
 
-	public ArrayList<Rental> getActiveRentals() {
+	ArrayList<Rental> getActiveRentals() {
 		return ActiveRentals;
 	}
 
-	public ArrayList<Rental> getTimedOutRentals() {
+	ArrayList<Rental> getTimedOutRentals() {
 		return TimedOutRentals;
 	}
 	

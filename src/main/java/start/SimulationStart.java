@@ -1,20 +1,21 @@
 package start;
 
+import bots.Bot;
+import bots.CredentialBroker;
+//import bots.RunnableBot;
+import parking.Parking;
+import strategies.NormalRentStrategy;
+import strategies.RegisterNewUserStrategy;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import bots.Bot;
-import bots.CredentialBroker;
-import bots.RunnableBot;
-import parking.Parking;
-import strategies.NormalRentStrategy;
 
 public class SimulationStart {
 	
 	
 	static final int botsCount = 5;
-	private static List<RunnableBot> bots = new ArrayList<RunnableBot>();
+	//private static List<RunnableBot> bots = new ArrayList<RunnableBot>();
 	private static Parking parking;
 	
 	public static void main(String[] args) {
@@ -22,16 +23,25 @@ public class SimulationStart {
 		SimulationStart.parking = new Parking();
 		Setup();
 		CredentialBroker.getInstance();
-		Bot bot;
 	
-			for(int i=0; i< 5; i++)
+			for(int i=0; i< 3; i++)
 			{
-				bot = new Bot(new NormalRentStrategy(5, 3), SimulationStart.parking);
-				RunnableBot runbot = new RunnableBot(bot);
-				Thread th = new Thread(runbot);
+				final Bot bot = new Bot(new RegisterNewUserStrategy(), SimulationStart.parking);
+				//RunnableBot runbot = new RunnableBot(bot);
+				//Thread th = new Thread(runbot);
+				//th.start();
+				
+				//bots.add(runbot);
+				
+				Thread th = new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						bot.Start();
+						
+					}
+				});
 				th.start();
-
-				bots.add(runbot);
 			}
 			
 	}

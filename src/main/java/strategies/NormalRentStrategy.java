@@ -1,12 +1,14 @@
 package strategies;
 
-import java.time.Duration;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import bots.Bot;
 import parking.Parking;
 import parking.Person;
+import parking.exceptions.CurrentlyRentingException;
+import parking.exceptions.IncorrectCredentialsException;
+
+import java.time.Duration;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class NormalRentStrategy implements AbstractStrategy{
 
@@ -22,28 +24,35 @@ public class NormalRentStrategy implements AbstractStrategy{
 	
 public synchronized void execute(Bot user, Parking parking) {
 	
-	Logger strategyLogger = Logger.getLogger("Strategy logger");
+	Logger strategyLogger = Logger.getLogger(AbstractStrategy.StrategyLoggerName);
 	Logger debugLogger = Logger.getLogger("Debug logger");
 	
 	strategyLogger.log(Level.INFO, "Trying to log in as " + user.getLogin());
-	Person person =  parking.Login(user.getLogin() ,user.getPassword());
-	
-	if(person == null)
+
+	Person person = null;
+
+	try {
+		person = parking.Login(user.getLogin(), user.getPassword());
+	}
+	catch (IncorrectCredentialsException e)
 	{
-		strategyLogger.warning(user + "It was impossible to login: check username or password. Returning...");
+		strategyLogger.warning(user + "It was impossible to login: " + e.getMessage());
 		debugLogger.severe(user + "Failed to login with credentials: username: " + user.getLogin() + " password: " + user.getPassword());
 		return;
 	}
-	
+
 	strategyLogger.info(user+"OK");
 	strategyLogger.info(user+"Trying to rent for: " + rentalSeconds + " seconds.");
-	int result = parking.MakeRental(person, Duration.ofSeconds(rentalSeconds));
-	
-	if(result != 0)
+
+	try {
+		parking.MakeRental(person, Duration.ofSeconds(rentalSeconds));
+	}
+	catch (CurrentlyRentingException e)
 	{
-		strategyLogger.warning(user+"Failed renting a place are there any free?");
+		strategyLogger.warning(user+"Failed renting: " + e.getMessage());
 		return;
 	}
+
 	strategyLogger.info(user + "Successfully rented space. Going to sleep for " + sleepSeconds);
 	try {
 		Thread.sleep(sleepSeconds * 1000);
