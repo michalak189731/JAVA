@@ -154,7 +154,7 @@ public class ParkingTests {
 	@Test
 	public void LoginCorrectData()
 	{
-		Person result = parking.Login("normal", "test");
+		Person result = parking.Login("normal", "test");	
 		
 		assertNotEquals(null, result);
 	}

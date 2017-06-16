@@ -45,6 +45,9 @@ public class CredentialBroker {
 	
 	public Credential getCredential()
 	{
+		
+		if(credentials.size()<=0)
+			return null;
 		int index = new Random().nextInt(credentials.size());
 		Credential cre = credentials.get(index);
 		credentials.remove(index);

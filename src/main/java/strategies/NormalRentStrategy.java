@@ -22,7 +22,7 @@ public class NormalRentStrategy implements AbstractStrategy{
 	
 public synchronized void execute(Bot user, Parking parking) {
 	
-	Logger strategyLogger = Logger.getLogger("Strategy logger");
+	Logger strategyLogger = Logger.getLogger(AbstractStrategy.StrategyLoggerName);
 	Logger debugLogger = Logger.getLogger("Debug logger");
 	
 	strategyLogger.log(Level.INFO, "Trying to log in as " + user.getLogin());

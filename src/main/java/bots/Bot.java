@@ -60,6 +60,8 @@ public class Bot {
 	private void loadCredentials()
 	{
 		Credential cred = CredentialBroker.getInstance().getCredential();
+		if(cred == null)
+			return;
 		this.login = cred.getLogin();
 		this.password = cred.getPassword();
 	}
