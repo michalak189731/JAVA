@@ -1,20 +1,26 @@
 package parking;
-import static org.junit.Assert.*;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import parking.exceptions.CurrentlyRentingException;
+import parking.exceptions.IncorrectCredentialsException;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-import javax.print.attribute.HashPrintServiceAttributeSet;
+import static org.junit.Assert.*;
 public class ParkingTests {
 
 	Parking parking;
 	Duration rentDuration;
 	Duration longRentDuration;
 	Person normalPerson, disabledPerson, premiumPerson;
-	
+
+	@Rule
+	public ExpectedException expected  = ExpectedException.none();
+
 	@Before
 	public void SetUp()
 	{
@@ -40,27 +46,43 @@ public class ParkingTests {
 	public void LoginCorrectDataTest()
 	{
 		Person targetPerson = normalPerson;
-		
-		Person person = parking.Login("normal", "test");
-		
+
+
+		Person person = null;
+		try {
+			person = parking.Login("normal", "test");
+		} catch (IncorrectCredentialsException e) {
+			fail("Given credentials were incorrect");
+		}
+
 		assertEquals(targetPerson.getName(), person.getName());
 		
 	}
 	
-	@Test 
-	public void LoginIncorrectDataTest()
-	{		
+	@Test
+	public void LoginIncorrectDataTest() throws  IncorrectCredentialsException{
+		expected.expect(IncorrectCredentialsException.class);
 		Person person = parking.Login("noone", "wrong");
-		
+
 		assertEquals(null, person);
 		
 	}
 	
-	@Test
+	@Test()
 	public void RentalTimeOutTest()
-	{	
-		Person person = parking.Login("normal", "test");
-		parking.MakeRental(person, rentDuration);
+	{
+		Person person;
+
+		try
+		{
+			person = parking.Login("normal", "test");
+			parking.MakeRental(person, rentDuration);
+		}
+		catch (Exception e)
+		{
+			fail("Error encountered " + e.getMessage());
+		}
+
 		
 		try {
 			Thread.sleep(rentDuration.toMillis() + 5);
@@ -74,9 +96,17 @@ public class ParkingTests {
 	@Test
 	public void CleanTimedOutRentalTest()
 	{
-		Person person = parking.Login("normal", "test");
-		parking.MakeRental(person, rentDuration);
-		
+		Person person = null;
+
+		try {
+			person = parking.Login("normal", "test");
+			parking.MakeRental(person, rentDuration);
+		}
+		catch (Exception e)
+		{
+			fail(e.getMessage());
+		}
+
 		try {
 			Thread.sleep(rentDuration.toMillis() + 5);
 		} catch (InterruptedException e) {
@@ -89,33 +119,37 @@ public class ParkingTests {
 	}
 	
 	@Test
-	public void UserAlreadyRentingTest()
-	{
-		Person person = parking.Login("normal", "test");
+	public void UserAlreadyRentingTest() throws CurrentlyRentingException, IncorrectCredentialsException {
+		Person person = null;
+
+		person = parking.Login("normal", "test");
+
+		expected.expect(CurrentlyRentingException.class);
 		parking.MakeRental(person, longRentDuration);
-		int result = parking.MakeRental(person, longRentDuration);
-		
-		assertEquals(-2, result);
+		parking.MakeRental(person, longRentDuration);
+
+		fail("No exception was raised.");
 		
 	}
 	
 	@Test
-	public void NoPlaceForParking()
-	{
+	public void NoPlaceForParking() throws IncorrectCredentialsException, CurrentlyRentingException {
 		Parking customParking = new Parking(0, 1, 1); 
-		
-		Person person = customParking.Login("normal", "test");
-		int result = customParking.MakeRental(person, longRentDuration);
-		
+
+		Person person = null;
+		int result = 0;
+
+			person = customParking.Login("normal", "test");
+			result = customParking.MakeRental(person, longRentDuration);
+
 		assertEquals(-1, result);
 	}
 	
 	@Test
-	public void ProlongRentalTest() throws InterruptedException
-	{
+	public void ProlongRentalTest() throws InterruptedException, IncorrectCredentialsException, CurrentlyRentingException {
 		Duration sec = Duration.ofSeconds(4);
 		Person person = parking.Login("normal", "test");
-		
+
 		parking.MakeRental(person, sec);
 		
 		Thread.sleep(2500);
@@ -127,10 +161,8 @@ public class ParkingTests {
 		assertEquals(0, parking.getTimedOutRentals().size());
 	}
 	
-	//TODO: Make test for disabled and premium rentals
-	
 	@Test
-	public void RentDisabledSpotTest()
+	public void RentDisabledSpotTest() throws IncorrectCredentialsException, CurrentlyRentingException
 	{
 		Person res = parking.Login("disabled", "dis");
 		
@@ -141,7 +173,7 @@ public class ParkingTests {
 	}
 	
 	@Test
-	public void RentPremiumSpotTest()
+	public void RentPremiumSpotTest() throws  CurrentlyRentingException, IncorrectCredentialsException
 	{
 		Person res = parking.Login("premium", "prem");
 		
@@ -152,7 +184,7 @@ public class ParkingTests {
 	}
 	
 	@Test
-	public void LoginCorrectData()
+	public void LoginCorrectData() throws IncorrectCredentialsException
 	{
 		Person result = parking.Login("normal", "test");	
 		
@@ -160,7 +192,7 @@ public class ParkingTests {
 	}
 	
 	@Test
-	public void RegisterNewUserTest()
+	public void RegisterNewUserTest() throws  IncorrectCredentialsException
 	{
 		int currentUsers = UserBroker.getCurrentUsers();
 		

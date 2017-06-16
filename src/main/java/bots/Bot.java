@@ -1,10 +1,10 @@
 package bots;
 
+import parking.Parking;
+import strategies.AbstractStrategy;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import parking.Parking;
-import strategies.AbstractStrategy; 
 
 public class Bot {
 
