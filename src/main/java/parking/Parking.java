@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import DBConnect.DBConnector;
+
 public class Parking {
 	
 	private int normalParkingSpots = 5;
@@ -28,6 +30,9 @@ public class Parking {
 	
 	private ArrayList<Rental> ActiveRentals = new ArrayList<Rental>();
 	private ArrayList<Rental> TimedOutRentals = new ArrayList<Rental>();
+	
+	DBConnector dbc = new DBConnector();
+	private ArrayList<Rental> AllRentals = new ArrayList<Rental>();
 	
 	public Parking()
 	{
@@ -72,6 +77,8 @@ public class Parking {
 		
 		Person.setNextId(id+1);
 		//TODO: Send Person to database 
+		dbc.addPersonToDb(result);
+
 		
 		UserBroker.AddPerson(result);
 		
@@ -316,6 +323,10 @@ public class Parking {
 			e.printStackTrace();
 		}
 		return new String(messageDigest.digest());
+	}
+	
+	public ArrayList<Rental> getAllRentals() {
+		return AllRentals;
 	}
 
 		

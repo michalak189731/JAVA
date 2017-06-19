@@ -70,4 +70,8 @@ public class Rental {
 		this.rentalID = globalRentalCounter;
 		globalRentalCounter++;
 	}
+	
+	public void setRentalID(int RentalID) {
+		this.rentalID = RentalID;
+	}
 }
