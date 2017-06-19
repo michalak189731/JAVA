@@ -119,5 +119,11 @@ public class Person {
 	public void setPremium(boolean isPremium) {
 		this.isPremium = isPremium;
 	}
-
+	
+	public String getPassword(){	
+		return this.password;
+	}
+	public void increaseNextId(){
+		this.nextId++;
+	}
 }

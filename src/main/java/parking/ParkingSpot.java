@@ -24,5 +24,9 @@ public class ParkingSpot {
 	public void setTaken(boolean isTaken) {
 		this.isTaken = isTaken;
 	}
+	
+	public void setSpotNumber(int spotNumber) {
+		this.spotNumber = spotNumber;
+	}
 
 }

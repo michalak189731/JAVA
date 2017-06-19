@@ -25,4 +25,9 @@ public class UserBroker {
 	{
 		return NewPeople.size();
 	}
+	
+	public final static ArrayList<Person> returnListOfPersons()
+	{
+		return NewPeople;
+	}
 }
