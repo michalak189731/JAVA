@@ -26,7 +26,7 @@ public class SimulationStart {
 	
 			for(int i=0; i< 3; i++)
 			{
-				final Bot bot = new Bot(new NormalRentStrategy(5, 3), SimulationStart.parking);
+				final Bot bot = new Bot(new RegisterNewUserStrategy(), SimulationStart.parking);
 				RunnableBot runbot = new RunnableBot(bot);
 				Thread th = new Thread(runbot);
 				th.start();

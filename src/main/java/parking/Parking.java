@@ -91,7 +91,7 @@ public class Parking {
 	}
 
 	
-	public Person Login(String username, String password) throws IncorrectCredentialsException
+	public synchronized Person Login(String username, String password) throws IncorrectCredentialsException
 	{
 		
 		Person targetUser = UserBroker.GetPerson(username);
@@ -108,7 +108,7 @@ public class Parking {
 		
 	}
 	
-	public Person RegisterPerson(String name, String surname, String email, String login, String password, LocalDateTime premiumExpires, boolean isDisabled, boolean isPremium)
+	public synchronized Person RegisterPerson(String name, String surname, String email, String login, String password, LocalDateTime premiumExpires, boolean isDisabled, boolean isPremium)
 	{
 		int id = Person.getNextId();
 		String hashedPassword = DigestMessage(password);
@@ -125,7 +125,7 @@ public class Parking {
 	}
 	
 	
-	public int MakeRental(Person client, Duration duration) throws CurrentlyRentingException
+	public synchronized int MakeRental(Person client, Duration duration) throws CurrentlyRentingException
 	{
 		if(GetPersonRental(client)!=null)
 			throw new CurrentlyRentingException("User " + client.getName() + "is already renting spot.");
@@ -140,7 +140,7 @@ public class Parking {
 			
 	} 
 	
-	void ProlongRental(Person client, Duration duration)
+	synchronized void ProlongRental(Person client, Duration duration)
 	{
 		final Rental rental = GetPersonRental(client);
 		if(rental==null)
@@ -185,7 +185,7 @@ public class Parking {
 		return TimedOutRentals;
 	}
 	
-	public void FinishRental(Person client)
+	public synchronized void FinishRental(Person client)
 	{
 		Rental targetRental = GetPersonRental(client);
 		
@@ -196,10 +196,11 @@ public class Parking {
 		targetRental.setRentalEnd(LocalDateTime.now());
 		targetRental.getParkingSpot().setTaken(false);
 		
-		//TODO: Add rental to database
+		dbc.addRentalToDb(targetRental);
+		AllRentals.add(targetRental);
 	}
 	
-	public void CancelRental(Person client)
+	public synchronized void CancelRental(Person client)
 	{
 		Rental targetRental = GetPersonRental(client);
 		
@@ -211,7 +212,7 @@ public class Parking {
 		targetRental.setRentalEnd(LocalDateTime.now());
 	}
 
-	public void ClearRental(Person client)
+	public synchronized void ClearRental(Person client)
 	{
 		Rental targetRental = GetPersonalTimedOutRental(client);
 		
@@ -222,19 +223,16 @@ public class Parking {
 		targetRental.getParkingSpot().setTaken(false);
 	}
 	
-	public Rental getRental(int rentalID)
+	public Rental getActiveRental(int rentalID)
 	{
 		for(Rental rent : ActiveRentals)
 		{
 			if(rent.getRentalID() == rentalID)
 				return rent;
 		}
-		
-		//TODO: Ask database for rental.
 		return null;
 	}
 	
-	//TODO: Test this method
 	public void BuyPremium(Person client, Duration duration)
 	{
 		if(client.isPremium())

@@ -1,5 +1,7 @@
 package strategies;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.logging.Logger;
 
 import bots.Bot;
@@ -25,7 +27,7 @@ public class RegisterNewUserStrategy implements AbstractStrategy {
 		
 		strategyLogger.info(user + "trying to register user " + newUserLogin);
 		
-		Person newPerson = parking.RegisterPerson("Tom", "Baker", "tombaker@whatnot.com", newUserLogin, newUserPassword, null, false, false);
+		Person newPerson = parking.RegisterPerson("Tom", "Baker", "tombaker@whatnot.com", newUserLogin, newUserPassword, LocalDateTime.now().minus( Duration.ofDays(2)), false, false);
 		if(newPerson==null)
 		{
 			strategyLogger.warning(user + "couldn't register user canceling...");

@@ -167,7 +167,7 @@ public class ParkingTests {
 		Person res = parking.Login("disabled", "dis");
 		
 		int rentID = parking.MakeRental(res, longRentDuration);
-		Rental rent = parking.getRental(rentID);
+		Rental rent = parking.getActiveRental(rentID);
 		
 		assertTrue(parking.getDisabledParkingSpots().contains(rent.getParkingSpot()));
 	}
@@ -178,7 +178,7 @@ public class ParkingTests {
 		Person res = parking.Login("premium", "prem");
 		
 		int rentID = parking.MakeRental(res, longRentDuration);
-		Rental rent = parking.getRental(rentID);
+		Rental rent = parking.getActiveRental(rentID);
 		
 		assertTrue(parking.getPremiumParkingSpots().contains(rent.getParkingSpot()));
 	}
