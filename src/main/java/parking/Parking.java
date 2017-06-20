@@ -48,10 +48,52 @@ public class Parking {
 		
 	}
 	
+	private void Initialize(int normal, int premium, int disabled)
+	{
+		for(int i=0; i<normal; i++)
+		{
+			ParkingSpot spot = new ParkingSpot();
+			AllParkingSpots.add(spot);
+			NormalParkingSpots.add(spot);
+		}
+		
+		for(int i=0; i<premium; i++)
+		{
+			ParkingSpot spot = new ParkingSpot();
+			AllParkingSpots.add(spot);
+			PremiumParkingSpots.add(spot);
+		}
+		
+		for(int i=0; i<disabled; i++)
+		{
+			ParkingSpot spot = new ParkingSpot();
+			AllParkingSpots.add(spot);
+			DisabledParkingSpots.add(spot);
+		}
+		try{
+		Parking.messageDigest = MessageDigest.getInstance("SHA");}
+		catch(NoSuchAlgorithmException e)
+		{
+
+		}
+		
+		for(Person p : dbc.getPersonsFromDb())
+		{
+			UserBroker.AddPerson(p);
+			Person.setNextId(p.getId()+1);
+		}
+		
+		for(Rental r : dbc.getRentalsFromDb())
+		{
+			AllRentals.add(r);
+			Rental.setGlobalCounter(r.getRentalID()+1);
+		}
+	}
+
+	
 	public Person Login(String username, String password) throws IncorrectCredentialsException
 	{
 		
-		//For now mock target user
 		Person targetUser = UserBroker.GetPerson(username);
 		
 		if(targetUser == null)
@@ -72,9 +114,6 @@ public class Parking {
 		String hashedPassword = DigestMessage(password);
 		
 		Person result = new Person(name, surname, email, login, hashedPassword, id, LocalDateTime.now(), premiumExpires, isDisabled, isPremium);
-		//TODO: Validate if person is OK
-		
-		
 		Person.setNextId(id+1);
 		//TODO: Send Person to database 
 		dbc.addPersonToDb(result);
@@ -216,36 +255,7 @@ public class Parking {
 		client.setDisabled(true);
 	} 
 	
-	private void Initialize(int normal, int premium, int disabled)
-	{
-		for(int i=0; i<normal; i++)
-		{
-			ParkingSpot spot = new ParkingSpot();
-			AllParkingSpots.add(spot);
-			NormalParkingSpots.add(spot);
-		}
-		
-		for(int i=0; i<premium; i++)
-		{
-			ParkingSpot spot = new ParkingSpot();
-			AllParkingSpots.add(spot);
-			PremiumParkingSpots.add(spot);
-		}
-		
-		for(int i=0; i<disabled; i++)
-		{
-			ParkingSpot spot = new ParkingSpot();
-			AllParkingSpots.add(spot);
-			DisabledParkingSpots.add(spot);
-		}
-		try{
-		Parking.messageDigest = MessageDigest.getInstance("SHA");}
-		catch(NoSuchAlgorithmException e)
-		{
-
-		}
-	}
-
+	
 	private int MakeDisabledRental(Person client, Duration duration)
 	{
 		for (ParkingSpot spot : DisabledParkingSpots) {

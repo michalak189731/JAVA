@@ -9,6 +9,12 @@ public class Rental {
 	
 	private static int globalRentalCounter = 0;
 	
+	static void setGlobalCounter(int num)
+	{
+		if(globalRentalCounter < num)
+			globalRentalCounter = num;
+	}
+	
 	public boolean isFinished() {
 		return isFinished;
 	}

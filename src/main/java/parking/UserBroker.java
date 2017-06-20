@@ -16,6 +16,17 @@ public class UserBroker {
 		return null;
 	}
 	
+	public final static Person GetPerson(int id)
+	{
+		for(Person p : NewPeople)
+		{
+			if(p.getId() == id)
+				return p;
+		}
+		
+		return null;
+	}
+	
 	public final static void AddPerson(Person person)
 	{
 		NewPeople.add(person);

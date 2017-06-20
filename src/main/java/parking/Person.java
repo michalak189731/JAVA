@@ -27,7 +27,8 @@ public class Person {
 	
 	public static void setNextId(int id)
 	{
-		nextId = id;
+		if(id > nextId)
+			nextId=id;
 	}
 	
 	public String getName() {
