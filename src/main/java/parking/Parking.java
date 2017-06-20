@@ -236,11 +236,14 @@ public class Parking {
 			client.setPremium(true);
 			client.setPremiumExpires(LocalDateTime.now().plus(duration));
 		}
+		
+		dbc.updatePersonIsPremiumInDb(client);
 	}
 	
 	public void SetDisabled(Person client)
 	{
 		client.setDisabled(true);
+		dbc.updatePersonIsDisabledInDb(client);
 	} 
 	
 	

@@ -9,10 +9,12 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import parking.ParkingSpot;
 import parking.Person;
 import parking.Rental;
+import parking.UserBroker;
 
 public class DBConnector {
 	
@@ -31,7 +33,8 @@ public class DBConnector {
 		}
 	}
 	
-	public void getPersonsFromDb(ArrayList<Person> p) {
+	public List<Person> getPersonsFromDb() {
+		List<Person> p = new ArrayList<Person>();
 		try {
 			String query = "SELECT * FROM `person`";
 			st = con.createStatement();
@@ -63,6 +66,7 @@ public class DBConnector {
 		} catch (Exception e) {
 
 		}
+		return p;
 	}
 
 	public void addPersonToDb(Person p) {
@@ -124,7 +128,8 @@ public class DBConnector {
 	
 	
 	
-	public void getRentalsFromDb(ArrayList<Rental> r,ArrayList<Person> p){
+	public List<Rental> getRentalsFromDb(){
+		List<Rental> r = new ArrayList<>();
 		try {
 			String query = "SELECT * FROM `rental`";
 
@@ -147,7 +152,7 @@ public class DBConnector {
 				Instant instant2 = Instant.ofEpochMilli(d2.getTime());
 				LocalDateTime rentalEnd = LocalDateTime.ofInstant(instant2, ZoneOffset.UTC);
 				
-				Rental r1 = new Rental(returnPerson(p,client),ps, rentalStart);
+				Rental r1 = new Rental(UserBroker.GetPerson(client),ps, rentalStart);
 				r1.setRentalID(RentalID);
 				ps.setSpotNumber(parkingSpot);
 				r1.setFinished(isFinished);
@@ -155,12 +160,13 @@ public class DBConnector {
 				r.add(r1);
 
 				
-				System.out.println(RentalID+" " + returnPerson(p,client).getId() + " " + ps.getSpotNumber() 
+				System.out.println(RentalID+" " + client + " " + ps.getSpotNumber() 
 				+ " " + isFinished + " " + rentalStart + " " + rentalEnd );
 			}
 		} catch (Exception e) {
 			System.out.println("Error " + e);
 		}
+		return r;
 	}
 
 	public void addRentalToDb(Rental r){
