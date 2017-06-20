@@ -29,39 +29,46 @@ public class DatabaseStart {
 		DatabaseStart.parking = new Parking();
 		DBConnector dbc = new DBConnector();
 
-		// getPersonsFromDb method
+//		// getPersonsFromDb method
 		System.out.println("getPersonsFromDb method");
 		
 		System.out.println(userBroker.getCurrentUsers());
 		dbc.getPersonsFromDb(userBroker.returnListOfPersons());
 		System.out.println(userBroker.getCurrentUsers());
 
-		// addPersonToDb method
+//		 addPersonToDb method
 		System.out.println("addPersonToDb method");
 
 		DatabaseStart.parking.RegisterPerson("Mark", "Hill", "test@test.com", "normal", "jane", LocalDateTime.now(),
 				false, false);
 		System.out.println(userBroker.getCurrentUsers());
 
-		// getRentalsFromDb method
-		System.out.println("getRentalsFromDb method");
 
-		ParkingSpot ps = new ParkingSpot();
-		ps.setSpotNumber(1);
-		System.out.println(parking.getAllRentals().size());
-		dbc.getRentalsFromDb(parking.getAllRentals(), userBroker.returnListOfPersons());
-		System.out.println(parking.getAllRentals().size());
+		// getRentalsFromDb method
+		
+//		System.out.println("getRentalsFromDb method");
+//
+//		ParkingSpot ps = new ParkingSpot();
+//		ps.setSpotNumber(1);
+//		System.out.println(parking.getAllRentals().size());
+//		dbc.getRentalsFromDb(parking.getAllRentals(), userBroker.returnListOfPersons());
+//		System.out.println(parking.getAllRentals().size());
 
 		// addRentalToDb method
-		System.out.println("addRentalToDb method");
 		
-		ps.setSpotNumber(3);
-		Rental r1 = new Rental(userBroker.GetPerson("szary"), ps, LocalDateTime.now());
-		r1.setRentalID(8);
-		r1.setFinished(false);
-		r1.setRentalEnd(LocalDateTime.now());
-		dbc.addRentalToDb(r1);
+//		System.out.println("addRentalToDb method");
+//		
+//		ps.setSpotNumber(3);
+//		Rental r1 = new Rental(userBroker.GetPerson("szary"), ps, LocalDateTime.now());
+//		r1.setRentalID(8);
+//		r1.setFinished(false);
+//		r1.setRentalEnd(LocalDateTime.now());
+//		dbc.addRentalToDb(r1);
 
+		
+		dbc.getPersonsFromDb(userBroker.returnListOfPersons());
+		dbc.updatePersonIsPremiumInDb(userBroker.GetPerson("normal"));
+		dbc.updatePersonIsDisabledInDb(userBroker.GetPerson("normal"));
 	}
 
 }

@@ -1,5 +1,7 @@
 package strategies;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.logging.Logger;
 
 import bots.Bot;
@@ -16,21 +18,22 @@ public class RegisterNewUserStrategy implements AbstractStrategy {
 	
 	@Override
 	public synchronized void execute(Bot user, Parking parking) {
-		String newUserLogin = "user" + IDOfNextUser;
+		String newUserLogin = "user";
 		IDOfNextUser++;
-		String newUserPassword = "mypass";
+		String newUserPassword = "aaaa";
 		
 		
 		Logger strategyLogger = Logger.getLogger(StrategyLoggerName);
 		
 		strategyLogger.info(user + "trying to register user " + newUserLogin);
 		
-		Person newPerson = parking.RegisterPerson("Tom", "Baker", "tombaker@whatnot.com", newUserLogin, newUserPassword, null, false, false);
-		if(newPerson==null)
-		{
-			strategyLogger.warning(user + "couldn't register user canceling...");
-			return;
-		}
+		// parking.RegisterPerson("Tom", "Baker", "tombaker", newUserLogin, newUserPassword, LocalDateTime.now(), false, false);
+		 parking.RegisterPerson("Mark", "Hill", "test@test.com",newUserLogin, newUserPassword,LocalDateTime.now(),false, false);
+//		if(newPerson==null)
+//		{
+//			strategyLogger.warning(user + "couldn't register user canceling...");
+//			return;
+//		}
 		
 		Credential cred = new Credential(newUserLogin, newUserPassword);
 		CredentialBroker.getInstance().returnCredential(cred);

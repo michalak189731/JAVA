@@ -16,6 +16,18 @@ public class UserBroker {
 		return null;
 	}
 	
+	public final static Person GetPersonID(String username)
+	{
+		for(Person p : NewPeople)
+		{
+			if(p.getLogin().equals(username))
+				return p;
+		}
+		
+		return null;
+	}
+	
+	
 	public final static void AddPerson(Person person)
 	{
 		NewPeople.add(person);

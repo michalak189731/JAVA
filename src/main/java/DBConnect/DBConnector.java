@@ -91,6 +91,39 @@ public class DBConnector {
 		}
 	}
 	
+	public void updatePersonIsPremiumInDb(Person p) {
+		try {
+				String query = "UPDATE `person` SET `isPremium` = '"+((p.isPremium()) ? "0" : "1") +
+						"' WHERE `person`.`ClientID` = "+Integer.toString(p.getId())+"";	
+	
+			
+			st = con.createStatement();
+			st.executeUpdate(query);
+			System.out.println(" person isPremium updated");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void updatePersonIsDisabledInDb(Person p) {
+		try {
+				String query = "UPDATE `person` SET `isDisabled` = '"+((p.isDisabled()) ? "0" : "1") +
+						"' WHERE `person`.`ClientID` = "+Integer.toString(p.getId())+"";	
+	
+			
+			st = con.createStatement();
+			st.executeUpdate(query);
+			System.out.println(" person isDisabled updated");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	
 	public void getRentalsFromDb(ArrayList<Rental> r,ArrayList<Person> p){
 		try {
 			String query = "SELECT * FROM `rental`";
