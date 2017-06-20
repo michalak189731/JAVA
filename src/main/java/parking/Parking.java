@@ -4,13 +4,12 @@ import parking.exceptions.CurrentlyRentingException;
 import parking.exceptions.IncorrectCredentialsException;
 
 import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+import org.apache.commons.codec.digest.*;
 
 import DBConnect.DBConnector;
 
@@ -19,8 +18,6 @@ public class Parking {
 	private int normalParkingSpots = 5;
 	private int premiumParkingSpots = 5;
 	private int disabledParkingSpots = 3;
-	
-	private static MessageDigest messageDigest;
 	
 	private ArrayList<ParkingSpot> AllParkingSpots = new ArrayList<ParkingSpot>();
 	
@@ -70,13 +67,6 @@ public class Parking {
 			AllParkingSpots.add(spot);
 			DisabledParkingSpots.add(spot);
 		}
-		try{
-		Parking.messageDigest = MessageDigest.getInstance("SHA");}
-		catch(NoSuchAlgorithmException e)
-		{
-
-		}
-		
 		for(Person p : dbc.getPersonsFromDb())
 		{
 			UserBroker.AddPerson(p);
@@ -325,12 +315,8 @@ public class Parking {
 	
 	private static String DigestMessage(String string)
 	{
-		try {
-			messageDigest.update(string.getBytes("UTF-8"));
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		return new String(messageDigest.digest());
+		String pass =DigestUtils.sha1Hex(string); 
+		return pass.substring(0, 10);
 	}
 	
 	public ArrayList<Rental> getAllRentals() {
